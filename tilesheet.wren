@@ -1,4 +1,4 @@
-import "graphics" for ImageData
+import "graphics" for ImageData, Color
 import "palette" for FG, BG
 
 class Tilesheet {
@@ -30,6 +30,17 @@ class Tilesheet {
       "mode": "MONO",
       "foreground": FG,
       "background": BG
+    })
+  }
+  getTransTile(sx, sy, sw, sh) {
+    return _image.transform({
+      "srcX": sx, "srcY": sy,
+      "srcW": sw, "srcH": sh,
+      "scaleX": 3,
+      "scaleY": 3,
+      "mode": "MONO",
+      "foreground": FG,
+      "background": Color.none
     })
   }
 }

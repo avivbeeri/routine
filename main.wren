@@ -2,7 +2,7 @@ import "dome" for Window
 import "graphics" for Canvas, Color
 import "./palette" for FG, BG
 import "math" for M
-import "scene" for WakeUpScene, ShowerScene
+import "scene" for Scenes, Begin
 
 var SCENE_TIMEOUT = 2 * 60
 
@@ -12,17 +12,30 @@ class Core {
   init() {
     var scale = 4
     Canvas.resize(160, 144)
+    Window.title = "Routine"
     Window.resize(Canvas.width * scale, Canvas.height * scale)
-    _stage = 0
-    _scenes = [ WakeUpScene, ShowerScene ]
-    _fade = Canvas.height / 2
+
+    _stage = -1
+    _scenes = Scenes
+
+    // _fade = Canvas.height / 2
+    // _fadeDir = -1
+    // _waitTimer = SCENE_TIMEOUT
+
+    _fade = 0
     _waitTimer = 0
-    _fadeDir = -1
-    _currentScene = _scenes[0].new()
+    _fadeDir = 0
+
     _data = {
       "minutes": 0,
-      "hour": 6
+      "hour": 7,
+      "result": "You awaken to an alarm clock. It is too loud."
     }
+
+    // _currentScene = _scenes[_stage].new(_data)
+    // _currentScene.valid(_data)
+    _currentScene = Begin.new(_data)
+
     _time = generateTimeString()
   }
 
@@ -38,6 +51,12 @@ class Core {
       _fade = M.mid(0, _fade + (_fadeDir), (Canvas.height / 2))
       if (_fade == (Canvas.height / 2)) {
         _waitTimer = SCENE_TIMEOUT
+        var valid = false
+        while (!valid) {
+          _stage = (_stage + 1) % _scenes.count
+          _currentScene = _scenes[_stage].new(_data)
+          valid = _currentScene.valid(_data)
+        }
       }
     } else {
       _waitTimer = _waitTimer - 1
@@ -47,8 +66,6 @@ class Core {
       _fadeDir = 0
     } else if (_fade == (Canvas.height / 2)) {
       _fadeDir = -1
-      _stage = (_stage + 1) % _scenes.count
-      _currentScene = _scenes[_stage].new()
     } else if (_fadeDir == -1) {
       _data["result"] = null
       _time = generateTimeString()
@@ -64,15 +81,17 @@ class Core {
   }
 
   generateTimeString() {
-    var hour = lpad(_data["hour"])
-    var min = lpad(_data["minutes"])
+    var hour = lpad(_data["hour"] % 24)
+    var min = lpad(_data["minutes"] % 60)
     return "%(hour):%(min)"
   }
 
   draw(alpha) {
     Canvas.cls(BG)
     _currentScene.draw()
-    Canvas.print(_time, 0, 0, FG)
+    if (_currentScene.clock) {
+      Canvas.print(_time, 0, 0, FG)
+    }
 
     if (_fade > 0) {
       var halfScreen = Canvas.height / 2

@@ -1,5 +1,5 @@
 import "graphics" for Canvas
-import "./palette" for FG, BG
+import "./palette" for FG, BG, MG
 import "input" for Keyboard
 import "math" for M
 
@@ -56,14 +56,16 @@ class Menu {
     for (i in 0..._options.count) {
       if (i == _position) {
         Canvas.print(">", x + 0, y + i * 8, FG)
+        Canvas.print(_options[i], x + 8, y + i * 8, FG)
+      } else {
+        Canvas.print(_options[i], x + 8, y + i * 8, MG)
       }
-
-      Canvas.print(_options[i], x + 8, y + i * 8, FG)
       maxWidth = M.max(maxWidth, _options[i].count)
     }
     maxWidth = maxWidth + 1
 
-    Canvas.rect(x - 2, y - 2, 4 + maxWidth * 8, 4 + _options.count * 8, FG)
-
+    for (i in 3..4) {
+      Canvas.rect(x - i, y - i, i*2 + maxWidth * 8, i*2 + _options.count * 8, FG)
+    }
   }
 }
