@@ -1,11 +1,12 @@
 import "graphics" for Canvas, Color
-import "input" for Keyboard
 import "./palette" for FG, BG
 import "./sprites" for Sprites
 import "./menu" for Menu, Consequence as CON
 
 import "random" for Random
 var RNG = Random.new()
+
+var MENU_TOP = 30
 
 
 class Scene {
@@ -15,6 +16,12 @@ class Scene {
   clock { true }
   next { _next }
   next=(v) { _next = v }
+
+  printCenter(text, y) {
+    var left = (Canvas.width - text.count * 8) / 2
+    Canvas.print(text, left, y, FG)
+  }
+
 }
 
 class WakeUpScene is Scene {
@@ -37,7 +44,7 @@ class WakeUpScene is Scene {
 
   draw() {
     Sprites.bed.draw((Canvas.width - 32 * 3) / 2, Canvas.height / 2)
-    _menu.draw(20, 20)
+    _menu.draw(20, MENU_TOP)
   }
 }
 
@@ -65,7 +72,7 @@ class ShowerScene is Scene {
 
     Sprites.toilet.draw(left, Canvas.height / 2)
     Sprites.bath.draw(left + 16 * 3, Canvas.height / 2)
-    _menu.draw(20, 20)
+    _menu.draw(20, MENU_TOP)
   }
 }
 
@@ -92,7 +99,7 @@ class BreakfastScene is Scene {
     Sprites.chair.draw(left, Canvas.height / 2)
     Sprites.table.draw(left + 16 * 3, Canvas.height / 2)
     Sprites.cooker.draw(left + 32 * 3, Canvas.height / 2)
-    _menu.draw(20, 20)
+    _menu.draw(20, MENU_TOP)
   }
 }
 class Chores1Scene is Scene {
@@ -118,7 +125,7 @@ class Chores1Scene is Scene {
     Sprites.sink.draw(left, Canvas.height / 2)
     Sprites.table.draw(left + 16 * 3, Canvas.height / 2)
     Sprites.dishes.draw(left + 16 * 3, Canvas.height / 2 - 4 * 3)
-    _menu.draw(20, 20)
+    _menu.draw(20, MENU_TOP)
   }
 }
 
@@ -149,7 +156,7 @@ class WorkScene is Scene {
 
     Sprites.officechair.draw(left, Canvas.height / 2)
     Sprites.desk.draw(left + 16 * 3, Canvas.height / 2)
-    _menu.draw(20, 20)
+    _menu.draw(20, MENU_TOP)
   }
 }
 
@@ -186,7 +193,7 @@ class LunchScene is Scene {
     Sprites.chair.draw(left, Canvas.height / 2)
     Sprites.table.draw(left + 16 * 3, Canvas.height / 2)
     Sprites.cooker.draw(left + 32 * 3, Canvas.height / 2)
-    _menu.draw(20, 20)
+    _menu.draw(20, MENU_TOP)
   }
 }
 
@@ -221,7 +228,7 @@ class DinnerScene is Scene {
     Sprites.chair.draw(left, Canvas.height / 2)
     Sprites.table.draw(left + 16 * 3, Canvas.height / 2)
     Sprites.cooker.draw(left + 32 * 3, Canvas.height / 2)
-    _menu.draw(20, 20)
+    _menu.draw(20, MENU_TOP)
   }
 }
 
@@ -249,7 +256,7 @@ class EveningScene is Scene {
     Sprites.bookshelf.draw(left, Canvas.height / 2)
     Sprites.fire.draw(left + 16 * 3, Canvas.height / 2 - 2 * 3)
     Sprites.bookshelf.draw(left + 32 * 3, Canvas.height / 2)
-    _menu.draw(20, 20)
+    _menu.draw(20, MENU_TOP)
   }
 }
 
@@ -271,11 +278,6 @@ class SleepScene is Scene {
       next = false
       _finish = true
     }
-  }
-
-  printCenter(text, y) {
-    var left = (Canvas.width - text.count * 8) / 2
-    Canvas.print(text, left, y, FG)
   }
 
   draw() {
@@ -312,6 +314,9 @@ class Begin is Scene {
   draw() {
     var w = 48
     var h = Canvas.height / 2
+    printCenter("This is the", Canvas.width / 4 - 8)
+    printCenter("Routine.", Canvas.width / 4)
+
     _menu.draw((Canvas.width - 6 * 8) / 2, h - 4)
   }
 

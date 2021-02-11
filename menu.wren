@@ -1,6 +1,6 @@
 import "graphics" for Canvas
 import "./palette" for FG, BG, MG
-import "input" for Keyboard
+import "./keys" for Actions
 import "math" for M
 
 class Consequence {
@@ -34,14 +34,19 @@ class Menu {
     _options = options
     _consequences = consequences
     _position = 0
+    _maxWidth = 0
+    for (i in 0..._options.count) {
+      _maxWidth = M.max(_maxWidth, _options[i].count)
+    }
+    _maxWidth = _maxWidth + 1
   }
 
   update(ctx) {
-    if (Keyboard["up"].justPressed) {
+    if (Actions.up.firing) {
       _position = _position - 1
-    } else if (Keyboard["down"].justPressed) {
+    } else if (Actions.down.firing) {
       _position = _position + 1
-    } else if (Keyboard["space"].justPressed) {
+    } else if (Actions.confirm.firing) {
       if (_consequences) {
         _consequences[_position].execute(ctx)
       }
@@ -52,7 +57,8 @@ class Menu {
   }
 
   draw(x, y) {
-    var maxWidth = 0
+    var maxWidth = _maxWidth
+    x = (Canvas.width - 8 * _maxWidth) / 2
     for (i in 0..._options.count) {
       if (i == _position) {
         Canvas.print(">", x + 0, y + i * 8, FG)
@@ -60,9 +66,7 @@ class Menu {
       } else {
         Canvas.print(_options[i], x + 8, y + i * 8, MG)
       }
-      maxWidth = M.max(maxWidth, _options[i].count)
     }
-    maxWidth = maxWidth + 1
 
     for (i in 3..4) {
       Canvas.rect(x - i, y - i, i*2 + maxWidth * 8, i*2 + _options.count * 8, FG)

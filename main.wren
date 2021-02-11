@@ -90,7 +90,9 @@ class Core {
     Canvas.cls(BG)
     _currentScene.draw()
     if (_currentScene.clock) {
-      Canvas.print(_time, 0, 0, FG)
+      var left = Canvas.width - 44
+      Canvas.rect(left, 1, 5 * 8 + 3, 11, FG)
+      Canvas.print(_time, left + 2, 3, FG)
     }
 
     if (_fade > 0) {
