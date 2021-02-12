@@ -113,7 +113,7 @@ class Core {
         var lines = [""]
         for (word in words) {
           var line = lines[-1]
-          if (line.count + word.count > maxWidth) {
+          if (1 + line.count + word.count > maxWidth) {
             lines[-1] = line.trim()
             lines.add(word)
           } else {
